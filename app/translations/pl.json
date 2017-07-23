@@ -1,0 +1,7 @@
+{
+  "app.components.HomePage.header": "Strona główna",
+  "app.components.NotFoundPage.header": "Nie odnaleziono strony",
+  "app.components.Projects.header": "Projekty",
+  "app.containers.LanguageToggler.en": "ang",
+  "app.containers.LanguageToggler.pl": "pl"
+}

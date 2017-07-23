@@ -1,0 +1,7 @@
+{
+  "app.components.HomePage.header": "Homepage!",
+  "app.components.NotFoundPage.header": "This is NotFoundPage component!",
+  "app.components.Projects.header": "Projects",
+  "app.containers.LanguageToggler.en": "en",
+  "app.containers.LanguageToggler.pl": "pl"
+}
