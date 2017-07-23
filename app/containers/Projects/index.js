@@ -17,7 +17,7 @@ import ProjectsList from '../../components/ProjectsList'
 export default class Projects extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   render() {
     return (
-      <div>
+      <div className="container">
         <h1>
           <FormattedMessage {...messages.header} />
         </h1>

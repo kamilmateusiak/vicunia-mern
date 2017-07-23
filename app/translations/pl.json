@@ -3,5 +3,7 @@
   "app.components.NotFoundPage.header": "Nie odnaleziono strony",
   "app.components.Projects.header": "Projekty",
   "app.containers.LanguageToggler.en": "ang",
-  "app.containers.LanguageToggler.pl": "pl"
+  "app.containers.LanguageToggler.pl": "pl",
+  "app.components.Navbar.home": "Główna",
+  "app.components.Navbar.projects": "Projekty"
 }

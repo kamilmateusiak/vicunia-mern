@@ -14,6 +14,7 @@ import { FormattedMessage } from 'react-intl';
 import messages from './messages';
 import Button from '../../components/Button';
 import { Link } from 'react-router';
+import Banner from './Banner';
 
 export default class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   buttonClick = () => {
@@ -22,13 +23,16 @@ export default class HomePage extends React.PureComponent { // eslint-disable-li
   render() {
     return (
       <div>
-        <h1>
-          <FormattedMessage {...messages.header} />
-        </h1>
-        <Link to="/projects">
-          <Button onClick={this.buttonClick}>Projects</Button>
-        </Link>
-        <Button primary>Blabla</Button>
+        <Banner></Banner>
+        <div className="container">
+          <h1>
+            <FormattedMessage {...messages.header} />
+          </h1>
+          <Link to="/projects">
+            <Button onClick={this.buttonClick}>Projects</Button>
+          </Link>
+          <Button primary>Blabla</Button>
+        </div>
       </div>
     );
   }

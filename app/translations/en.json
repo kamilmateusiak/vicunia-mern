@@ -3,5 +3,7 @@
   "app.components.NotFoundPage.header": "This is NotFoundPage component!",
   "app.components.Projects.header": "Projects",
   "app.containers.LanguageToggler.en": "en",
-  "app.containers.LanguageToggler.pl": "pl"
+  "app.containers.LanguageToggler.pl": "pl",
+  "app.components.Navbar.home": "Home",
+  "app.components.Navbar.projects": "Projects"
 }
