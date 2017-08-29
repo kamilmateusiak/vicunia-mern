@@ -1,6 +1,18 @@
+/*
+ * HomePage
+ *
+ * This is the first thing users see of our App, at the '/' route
+ *
+ * NOTE: while this component should technically be a stateless functional
+ * component (SFC), hot reloading does not currently support SFCs. If hot
+ * reloading is not a necessity for you then you can refactor it and remove
+ * the linting exception.
+ */
+
 import React from 'react';
-import TrackerProjectInput from '../../components/TrackerProjectInput';
-import TrackerDescriptionInput from '../../components/TrackerDescriptionInput';
+import { FormattedMessage } from 'react-intl';
+import messages from './messages';
+import TrackerComp from '../../components/Tracker';
 import TrackerList from '../../components/TrackerList';
 
 const items = [
@@ -14,17 +26,11 @@ export default class Tracker extends React.Component { // eslint-disable-line re
   state = {
     selectedItem: '',
     listVisibility: false,
-    selectedItemDescription: '',
   }
-  handleOnProjectInputChange = (e) => {
+  handleOnChange = (e) => {
     this.setState({
       selectedItem: e.target.value,
       listVisibility: true,
-    });
-  }
-  handleOnDescriptionInputChange = (e) => {
-    this.setState({
-      selectedItemDescription: e.target.value,
     });
   }
   handleListItemClick = (item) => {
@@ -42,13 +48,13 @@ export default class Tracker extends React.Component { // eslint-disable-line re
     return (
       <div className="container">
         <div className="col-md-3">
-          <TrackerProjectInput focusController={this.focusController} selectedItem={this.state.selectedItem} handleOnChange={this.handleOnProjectInputChange} />
+          <TrackerComp focusController={this.focusController} selectedItem={this.state.selectedItem} handleOnChange={this.handleOnChange}></TrackerComp>
           {this.state.listVisibility &&
             <TrackerList handleListItemClick={this.handleListItemClick} items={items.filter((item) => item.name.toUpperCase().indexOf(this.state.selectedItem.toUpperCase()) >= 0)}></TrackerList>
           }
         </div>
         <div className="col-md-3">
-          <TrackerDescriptionInput selectedItemDesc={this.state.selectedItemDescription} handleOnChange={this.handleOnDescriptionInputChange} />
+        
         </div>
       </div>
     );
