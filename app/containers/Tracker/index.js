@@ -7,13 +7,6 @@ import StopButton from '../../components/StopButton';
 import DivideButton from '../../components/DivideButton';
 import TrackerContainer from '../../components/TrackerContainer';
 
-const items = [
-  { id: 1, name: 'Zzysh' },
-  { id: 2, name: 'Archicom' },
-  { id: 3, name: 'Wielton' },
-  { id: 4, name: 'Nieprojektowe prace produkcji' },
-];
-
 export default class Tracker extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
@@ -21,6 +14,7 @@ export default class Tracker extends React.Component { // eslint-disable-line re
   }
 
   state = {
+    items: [],
     selectedItem: '',
     listVisibility: false,
     selectedItemDescription: '',
@@ -33,11 +27,11 @@ export default class Tracker extends React.Component { // eslint-disable-line re
 
   componentDidMount() {
     fetch('/api/projects/')
-      .then((response) => {
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        this.setState({
+          items: data,
+        });
       });
   }
 
@@ -120,7 +114,7 @@ export default class Tracker extends React.Component { // eslint-disable-line re
           <div className="col-md-3">
             <TrackerProjectInput focusController={this.focusController} selectedItem={this.state.selectedItem} handleOnChange={this.handleOnProjectInputChange} />
             {this.state.listVisibility &&
-              <TrackerList handleListItemClick={this.handleListItemClick} items={items.filter((item) => item.name.toUpperCase().indexOf(this.state.selectedItem.toUpperCase()) >= 0)}></TrackerList>
+              <TrackerList handleListItemClick={this.handleListItemClick} items={this.state.items.filter((item) => item.name.toUpperCase().indexOf(this.state.selectedItem.toUpperCase()) >= 0)}></TrackerList>
             }
           </div>
           <div className="col-md-3">

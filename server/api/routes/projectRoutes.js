@@ -1,8 +1,7 @@
 const router = require('express').Router();
+const controller = require('../controllers/projectController');
 
 router.route('/')
-  .get((req, res) => {
-    res.status(200).json({ message: 'Hello' });
-  });
+  .get(controller.get);
 
 module.exports = router;

@@ -6,7 +6,7 @@ export default function TrackerList(props) {
   return (
     <List>
       {
-        props.items.map((item) => <ListItem key={item.id} onClick={() => props.handleListItemClick(item)}>{item.name}</ListItem>)
+        props.items.map((item) => <ListItem key={item['_id']} onClick={() => props.handleListItemClick(item)}>{item.name}</ListItem>)
       }
     </List>
   );
