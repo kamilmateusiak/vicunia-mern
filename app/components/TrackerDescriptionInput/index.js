@@ -1,20 +1,17 @@
 import React from 'react';
-import TrackerContainer from './TrackerContainer';
 import DefaultLargeInput from '../DefaultLargeInput';
 
 function TrackerDescriptionInput(props) {
   return (
-    <TrackerContainer>
-      <DefaultLargeInput
-        value={props.selectedItemDescription}
-        onChange={props.handleOnChange} placeholder="Dodaj opis"
-      />
-    </TrackerContainer>
+    <DefaultLargeInput
+      value={props.selectedItemDesc}
+      onChange={props.handleOnChange} placeholder="Dodaj opis"
+    />
   );
 }
 
 TrackerDescriptionInput.propTypes = {
-  selectedItemDescription: React.PropTypes.string,
+  selectedItemDesc: React.PropTypes.string,
   handleOnChange: React.PropTypes.func,
 };
 
