@@ -78,15 +78,30 @@ export default class Tracker extends React.Component { // eslint-disable-line re
   }
 
   stopTracking = () => {
-    clearInterval(this.timerInterval);
-    this.setState({
-      selectedItem: '',
-      selectedItemDescription: '',
-      timer: {
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
+    fetch('/api/tracker/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        project: '59a7317f68f05537cf7110f2',
+        description: 'hubot',
+      }),
+    })
+    .then(() => {
+      clearInterval(this.timerInterval);
+      this.setState({
+        selectedItem: '',
+        selectedItemDescription: '',
+        timer: {
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+        },
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
   }
 
