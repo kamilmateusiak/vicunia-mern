@@ -15,7 +15,7 @@ export default class Tracker extends React.Component { // eslint-disable-line re
 
   state = {
     items: [],
-    selectedItem: '',
+    selectedItem: { name: '', _id: '' },
     listVisibility: false,
     selectedItemDescription: '',
     timer: {
@@ -37,7 +37,7 @@ export default class Tracker extends React.Component { // eslint-disable-line re
 
   handleOnProjectInputChange = (e) => {
     this.setState({
-      selectedItem: e.target.value,
+      selectedItem: { name: e.target.value, _id: '' },
       listVisibility: true,
     });
   }
@@ -48,7 +48,7 @@ export default class Tracker extends React.Component { // eslint-disable-line re
   }
   handleListItemClick = (item) => {
     this.setState({
-      selectedItem: item.name,
+      selectedItem: { name: item.name, _id: item['_id'] },
       listVisibility: false,
     });
     this.startTimer();
@@ -84,14 +84,14 @@ export default class Tracker extends React.Component { // eslint-disable-line re
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        project: '59a7317f68f05537cf7110f2',
-        description: 'hubot',
+        project: this.state.selectedItem._id,
+        description: this.state.selectedItemDescription,
       }),
     })
     .then(() => {
       clearInterval(this.timerInterval);
       this.setState({
-        selectedItem: '',
+        selectedItem: { name: '', _id: '' },
         selectedItemDescription: '',
         timer: {
           hours: 0,
@@ -127,9 +127,9 @@ export default class Tracker extends React.Component { // eslint-disable-line re
             <DivideButton className="center-block" onClick={this.divideTracking} />
           </div>
           <div className="col-md-3">
-            <TrackerProjectInput focusController={this.focusController} selectedItem={this.state.selectedItem} handleOnChange={this.handleOnProjectInputChange} />
+            <TrackerProjectInput focusController={this.focusController} selectedItem={this.state.selectedItem.name} handleOnChange={this.handleOnProjectInputChange} />
             {this.state.listVisibility &&
-              <TrackerList handleListItemClick={this.handleListItemClick} items={this.state.items.filter((item) => item.name.toUpperCase().indexOf(this.state.selectedItem.toUpperCase()) >= 0)}></TrackerList>
+              <TrackerList handleListItemClick={this.handleListItemClick} items={this.state.items.filter((item) => item.name.toUpperCase().indexOf(this.state.selectedItem.name.toUpperCase()) >= 0)}></TrackerList>
             }
           </div>
           <div className="col-md-3">
