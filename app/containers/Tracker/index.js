@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import TrackerProjectInput from '../../components/TrackerProjectInput';
 import TrackerDescriptionInput from '../../components/TrackerDescriptionInput';
 import TrackerTimer from '../../components/TrackerTimer';
@@ -16,6 +17,7 @@ export default class Tracker extends React.Component { // eslint-disable-line re
   state = {
     items: [],
     selectedItem: { name: '', _id: '' },
+    trackerEvent: {},
     listVisibility: false,
     selectedItemDescription: '',
     timer: {
@@ -31,6 +33,32 @@ export default class Tracker extends React.Component { // eslint-disable-line re
       .then((data) => {
         this.setState({
           items: data,
+        });
+      })
+      .then(() => {
+        fetch('/api/tracker/')
+        .then((response) => response.json())
+        .then((data) => {
+          if (data !== null) {
+            const selectedItem = _.find(this.state.items, (item) => item._id === data.project);
+            this.setState({
+              trackerEvent: data,
+              selectedItem: { name: selectedItem.name, _id: selectedItem._id },
+              listVisibility: false,
+            });
+            this.timerInterval = setInterval(() => {
+              const timer = Math.floor(Math.abs(new Date(data.startDate) - Date.now()) / 1000);
+
+              const timerCopy = { ...this.state.timer };
+              timerCopy.seconds = timer % 60;
+              timerCopy.minutes = Math.floor(timer / 60);
+              timerCopy.hours = Math.floor(timer / 3600);
+
+              this.setState({
+                timer: timerCopy,
+              });
+            }, 1000);
+          }
         });
       });
   }
@@ -48,44 +76,58 @@ export default class Tracker extends React.Component { // eslint-disable-line re
   }
   handleListItemClick = (item) => {
     this.setState({
-      selectedItem: { name: item.name, _id: item['_id'] },
+      selectedItem: { name: item.name, _id: item._id },
       listVisibility: false,
     });
-    this.startTimer();
+    this.startTimer(item);
   }
   focusController = (state) => {
     this.setState({
       listVisibility: state,
     });
   }
-  startTimer = () => {
-    this.timerInterval = setInterval(() => {
-      const timerCopy = { ...this.state.timer };
-      if (this.state.timer.seconds < 59) {
-        timerCopy.seconds += 1;
-      } else if (this.state.timer.minutes < 59) {
-        timerCopy.seconds = 0;
-        timerCopy.minutes += 1;
-      } else {
-        timerCopy.seconds = 0;
-        timerCopy.minutes = 0;
-        timerCopy.hours += 1;
-      }
-      this.setState({
-        timer: timerCopy,
-      });
-    }, 1000);
-  }
-
-  stopTracking = () => {
+  startTimer = (item) => {
     fetch('/api/tracker/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        project: this.state.selectedItem._id,
+        project: item._id,
         description: this.state.selectedItemDescription,
+      }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      this.setState({
+        trackerEvent: data,
+      });
+
+      this.timerInterval = setInterval(() => {
+        const timer = Math.floor(Math.abs(new Date(data.startDate) - Date.now()) / 1000);
+
+        const timerCopy = { ...this.state.timer };
+        timerCopy.seconds = timer % 60;
+        timerCopy.minutes = Math.floor(timer / 60);
+        timerCopy.hours = Math.floor(timer / 3600);
+
+        this.setState({
+          timer: timerCopy,
+        });
+      }, 1000);
+    });
+  }
+
+  stopTracking = () => {
+    fetch('/api/tracker/', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        _id: this.state.trackerEvent._id,
+        description: this.state.selectedItemDescription,
+        endDate: Date.now(),
       }),
     })
     .then(() => {
@@ -106,16 +148,32 @@ export default class Tracker extends React.Component { // eslint-disable-line re
   }
 
   divideTracking = () => {
-    clearInterval(this.timerInterval);
-    this.setState({
-      selectedItemDescription: '',
-      timer: {
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
+    fetch('/api/tracker/', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        _id: this.state.trackerEvent._id,
+        description: this.state.selectedItemDescription,
+        endDate: Date.now(),
+      }),
+    })
+    .then(() => {
+      clearInterval(this.timerInterval);
+      this.setState({
+        selectedItemDescription: '',
+        timer: {
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+        },
+      });
+      this.startTimer(this.state.selectedItem);
+    })
+    .catch((err) => {
+      console.log(err);
     });
-    this.startTimer();
   }
 
   render() {
