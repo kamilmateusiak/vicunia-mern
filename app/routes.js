@@ -56,6 +56,19 @@ export default function createRoutes(store) {
 
         importModules.catch(errorLoading);
       },
+      onEnter: (nextState, replace) => {
+        if (Auth.isUserAuthenticated()) {
+          replace('/');
+        }
+      }
+    },{
+      path: '/logout',
+      name: 'logout',
+      onEnter: (nextState, replace) => {
+        Auth.deauthenticateUser();
+
+        replace('/');
+      }
     },
     {
       path: '*',
@@ -66,14 +79,5 @@ export default function createRoutes(store) {
           .catch(errorLoading);
       },
     },
-    {
-      path: '/logout',
-      name: 'logout',
-      onEnter: (nextState, replace) => {
-        Auth.deauthenticateUser();
-
-        replace('/');
-      }
-    }
   ];
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import LoginForm from '../../components/LoginForm';
+import Auth from '../../utils/auth';
 
 export default class LoginPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -32,8 +33,11 @@ export default class LoginPage extends React.Component { // eslint-disable-line 
         this.setState({
           errors: {},
         });
-        console.log(response)
-        return null
+        return response.json()
+          .then((data) => {
+            Auth.authenticateUser(data.token);
+            this.context.router.replace('/');
+          })
       }
       return response.json()
         .then((data) => {
@@ -70,3 +74,7 @@ export default class LoginPage extends React.Component { // eslint-disable-line 
     );
   }
 }
+
+LoginPage.contextTypes = {
+  router: React.PropTypes.object.isRequired,
+};
