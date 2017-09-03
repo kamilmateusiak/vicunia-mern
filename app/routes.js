@@ -34,23 +34,23 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, 
-    {
-      path: '/projects',
-      name: 'projects',
-      getComponent(nextState, cb) {
-        const importModules = Promise.all([
-          import('containers/Projects'),
-        ]);
+    // {
+    //   path: '/projects',
+    //   name: 'projects',
+    //   getComponent(nextState, cb) {
+    //     const importModules = Promise.all([
+    //       import('containers/Projects'),
+    //     ]);
 
-        const renderRoute = loadModule(cb);
+    //     const renderRoute = loadModule(cb);
 
-        importModules.then(([component]) => {
-          renderRoute(component);
-        });
+    //     importModules.then(([component]) => {
+    //       renderRoute(component);
+    //     });
 
-        importModules.catch(errorLoading);
-      },
-    },
+    //     importModules.catch(errorLoading);
+    //   },
+    // },
     {
       path: '*',
       name: 'notfound',

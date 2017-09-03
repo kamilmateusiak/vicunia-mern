@@ -6,6 +6,6 @@ const List = styled.ul`
     margin: 0;
     border: 1px solid blue;
     border-radius: 5px;
-`
+`;
 
-export default List
+export default List;

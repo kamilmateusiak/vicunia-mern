@@ -2,6 +2,8 @@
 
 const express = require('express');
 const logger = require('./logger');
+const mongoose = require('mongoose');
+const bluebird = require('bluebird');
 
 const argv = require('minimist')(process.argv.slice(2));
 const setup = require('./middlewares/frontendMiddleware');
@@ -10,8 +12,19 @@ const ngrok = (isDev && process.env.ENABLE_TUNNEL) || argv.tunnel ? require('ngr
 const resolve = require('path').resolve;
 const app = express();
 
+mongoose.Promise = bluebird;
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/vicunia', {
+  useMongoClient: true,
+});
+
+mongoose.connection.on('error', () => {
+  console.log('There is an issue with your MongoDB connection.  Please make sure MongoDB is running.');
+  process.exit(1);
+});
+
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 // app.use('/api', myApi);
+app.use('/api', require('./api'));
 
 // In production we need to pass these values in instead of relying on webpack
 setup(app, {
