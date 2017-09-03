@@ -66,7 +66,6 @@ export default function createRoutes(store) {
       name: 'logout',
       onEnter: (nextState, replace) => {
         Auth.deauthenticateUser();
-
         replace('/');
       }
     },

@@ -2,6 +2,11 @@ import { injectGlobal } from 'styled-components';
 
 /* eslint no-unused-expressions: 0 */
 injectGlobal`
+  @font-face {
+    font-family: 'Lato';
+    src: url('https://fonts.googleapis.com/css?family=Lato:400&subset=latin-ext');;
+  }
+  
   html,
   body {
     height: 100%;
@@ -10,11 +15,11 @@ injectGlobal`
   }
 
   body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Lato', Helvetica, Arial, sans-serif;
   }
 
   body.fontLoaded {
-    font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Open Sans', 'Lato', Helvetica, Arial, sans-serif;
   }
 
   #app {
@@ -25,7 +30,7 @@ injectGlobal`
 
   p,
   label {
-    font-family: Georgia, Times, 'Times New Roman', serif;
+    font-family: 'Lato', Georgia, Times, 'Times New Roman', serif;
     line-height: 1.5em;
   }
 `;
