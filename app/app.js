@@ -16,6 +16,7 @@ import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { useScroll } from 'react-router-scroll';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import { blue800 } from 'material-ui/styles/colors';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import 'sanitize.css/sanitize.css';
@@ -73,9 +74,16 @@ const rootRoute = {
 
 injectTapEventPlugin();
 
+const muiTheme = getMuiTheme({
+  palette: {
+    textColor: blue800,
+    primary1Color: blue800,
+  },
+});
+
 const render = (messages) => {
   ReactDOM.render(
-    <MuiThemeProvider muiTheme={getMuiTheme()}>
+    <MuiThemeProvider muiTheme={muiTheme}>
       <Provider store={store}>
         <LanguageProvider messages={messages}>
           <Router

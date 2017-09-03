@@ -8,4 +8,7 @@ router.route('/:userid')
   .get(controller.get)
   .post(controller.post);
 
+router.route('/:userid/all')
+  .get(controller.getAllUserEvents);
+
 module.exports = router;

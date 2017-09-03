@@ -13,7 +13,6 @@ export default class Tracker extends React.Component { // eslint-disable-line re
   constructor(props) {
     super(props);
     this.timerInterval = 0;
-    this.isAlreadyTracking = false;
   }
 
   state = {
@@ -60,7 +59,6 @@ export default class Tracker extends React.Component { // eslint-disable-line re
                 timer: timerCopy,
               });
             }, 1000);
-            this.isAlreadyTracking = true;
           }
         });
       });
@@ -78,19 +76,37 @@ export default class Tracker extends React.Component { // eslint-disable-line re
     });
   }
   handleListItemClick = (item) => {
-    this.setState({
-      selectedItem: { name: item.name, _id: item._id },
-      listVisibility: false,
-    });
-    this.startTimer(item);
+    if (!_.isEmpty(this.state.trackerEvent) && item._id !== this.state.trackerEvent.project) {
+      this.stopTracking()
+        .then(() => {
+          this.setState({
+            selectedItem: { name: item.name, _id: item._id },
+            listVisibility: false,
+          });
+          this.startTimer(item);
+        });
+    } else if (_.isEmpty(this.state.trackerEvent)) {
+      this.setState({
+        selectedItem: { name: item.name, _id: item._id },
+        listVisibility: false,
+      });
+      this.startTimer(item);
+    } else {
+      this.setState({
+        selectedItem: { name: item.name, _id: item._id },
+        listVisibility: false,
+      });
+    }
   }
   focusController = (state) => {
-    this.setState({
-      listVisibility: state,
-    });
+    setTimeout(() => {
+      this.setState({
+        listVisibility: state,
+      });
+    }, 500);
   }
   startTimer = (item) => {
-    fetch(`/api/tracker/${Auth.getUserId()}`, {
+    return fetch(`/api/tracker/${Auth.getUserId()}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -122,7 +138,7 @@ export default class Tracker extends React.Component { // eslint-disable-line re
   }
 
   stopTracking = () => {
-    fetch('/api/tracker/', {
+    return fetch('/api/tracker/', {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -181,26 +197,26 @@ export default class Tracker extends React.Component { // eslint-disable-line re
 
   render() {
     return (
-      <div className="container">
-        <TrackerContainer>
-          <div className="col-sm-1">
-            <StopButton className="center-block" onClick={this.stopTracking} />
-            <DivideButton className="center-block" onClick={this.divideTracking} />
-          </div>
-          <div className="col-md-3">
+      <TrackerContainer>
+        <div className="col-sm-1">
+          <StopButton className="center-block" onClick={this.stopTracking} />
+          <DivideButton className="center-block" onClick={this.divideTracking} />
+        </div>
+        <div className="col-md-3">
+          <div style={{ position: 'relative' }}>
             <TrackerProjectInput focusController={this.focusController} selectedItem={this.state.selectedItem.name} handleOnChange={this.handleOnProjectInputChange} />
-            {this.state.listVisibility &&
+            { this.state.listVisibility &&
               <TrackerList handleListItemClick={this.handleListItemClick} items={this.state.items.filter((item) => item.name.toUpperCase().indexOf(this.state.selectedItem.name.toUpperCase()) >= 0)}></TrackerList>
             }
           </div>
-          <div className="col-md-3">
-            <TrackerDescriptionInput selectedItemDesc={this.state.selectedItemDescription} handleOnChange={this.handleOnDescriptionInputChange} />
-          </div>
-          <div className="col-md-3">
-            <TrackerTimer timer={this.state.timer} />
-          </div>
-        </TrackerContainer>
-      </div>
+        </div>
+        <div className="col-md-3">
+          <TrackerDescriptionInput selectedItemDesc={this.state.selectedItemDescription} handleOnChange={this.handleOnDescriptionInputChange} />
+        </div>
+        <div className="col-md-3">
+          <TrackerTimer timer={this.state.timer} />
+        </div>
+      </TrackerContainer>
     );
   }
 }
