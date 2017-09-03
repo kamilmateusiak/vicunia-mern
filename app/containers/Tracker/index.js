@@ -12,6 +12,7 @@ export default class Tracker extends React.Component { // eslint-disable-line re
   constructor(props) {
     super(props);
     this.timerInterval = 0;
+    this.isAlreadyTracking = false;
   }
 
   state = {
@@ -58,6 +59,7 @@ export default class Tracker extends React.Component { // eslint-disable-line re
                 timer: timerCopy,
               });
             }, 1000);
+            this.isAlreadyTracking = true;
           }
         });
       });

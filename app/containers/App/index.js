@@ -32,7 +32,7 @@ export default class App extends React.Component { // eslint-disable-line react/
             { name: 'description', content: 'Projecthub' },
           ]}
         />
-        { this.props.location.pathname !== '/' &&
+        { this.props.location.pathname !== '/' && this.props.location.pathname !== '/login' &&
           <Navbar></Navbar>
         }
         <main>
