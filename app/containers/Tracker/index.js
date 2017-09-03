@@ -7,6 +7,7 @@ import TrackerList from '../../components/TrackerList';
 import StopButton from '../../components/StopButton';
 import DivideButton from '../../components/DivideButton';
 import TrackerContainer from '../../components/TrackerContainer';
+import Auth from '../../utils/auth';
 
 export default class Tracker extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -37,7 +38,7 @@ export default class Tracker extends React.Component { // eslint-disable-line re
         });
       })
       .then(() => {
-        fetch('/api/tracker/')
+        fetch(`/api/tracker/${Auth.getUserId()}`)
         .then((response) => response.json())
         .then((data) => {
           if (data !== null) {
@@ -89,7 +90,7 @@ export default class Tracker extends React.Component { // eslint-disable-line re
     });
   }
   startTimer = (item) => {
-    fetch('/api/tracker/', {
+    fetch(`/api/tracker/${Auth.getUserId()}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

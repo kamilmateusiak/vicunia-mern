@@ -3,6 +3,7 @@ const logger = require('../../logger');
 
 exports.post = (req, res, next) => {
   const newTrackerEvent = req.body;
+  newTrackerEvent.user = req.params.userid;
 
   Tracker.create(newTrackerEvent)
     .then((data) => {
@@ -14,7 +15,7 @@ exports.post = (req, res, next) => {
 };
 
 exports.get = (req, res, next) => {
-  Tracker.where({ endDate: null }).findOne()
+  Tracker.where({ endDate: null, user: req.params.userid }).findOne()
     .then((data) => {
       res.status(200).json(data);
     }, (err) => {

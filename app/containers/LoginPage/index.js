@@ -35,13 +35,14 @@ export default class LoginPage extends React.Component { // eslint-disable-line 
         });
         return response.json()
           .then((data) => {
-            Auth.authenticateUser(data.token);
+            console.log(data);
+            Auth.authenticateUser(data.token, data.user.id);
             this.context.router.replace('/');
           })
       }
       return response.json()
         .then((data) => {
-          console.log(data)
+          console.log(data);
           const errors = data.errors ? data.errors : {};
           errors.summary = data.message;
           this.setState({
