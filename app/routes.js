@@ -41,6 +41,28 @@ export default function createRoutes(store) {
       }
     },
     {
+      path: '/project/:name',
+      name: 'project',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/ProjectPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([component]) => {
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+      onEnter: (nextState, replace) => {
+        if (!Auth.isUserAuthenticated()) {
+          replace('/login');
+        }
+      }
+    },
+    {
       path: '/login',
       name: 'login',
       getComponent(nextState, cb) {
@@ -61,7 +83,8 @@ export default function createRoutes(store) {
           replace('/');
         }
       }
-    },{
+    },
+    {
       path: '/logout',
       name: 'logout',
       onEnter: (nextState, replace) => {

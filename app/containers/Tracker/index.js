@@ -10,6 +10,10 @@ import TrackerContainer from '../../components/TrackerContainer';
 import Auth from '../../utils/auth';
 
 export default class Tracker extends React.Component { // eslint-disable-line react/prefer-stateless-function
+  static propTypes = {
+    trackerWidth: React.PropTypes.number,
+  }
+
   constructor(props) {
     super(props);
     this.timerInterval = 0;
@@ -26,7 +30,7 @@ export default class Tracker extends React.Component { // eslint-disable-line re
       minutes: 0,
       seconds: 0,
     },
-  }
+  };
 
   componentDidMount() {
     fetch('/api/projects/')
@@ -62,6 +66,10 @@ export default class Tracker extends React.Component { // eslint-disable-line re
           }
         });
       });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerInterval);
   }
 
   handleOnProjectInputChange = (e) => {
@@ -197,7 +205,7 @@ export default class Tracker extends React.Component { // eslint-disable-line re
 
   render() {
     return (
-      <TrackerContainer>
+      <TrackerContainer trackerWidth={this.props.trackerWidth}>
         <div className="col-sm-1">
           <StopButton className="center-block" onClick={this.stopTracking} />
           <DivideButton className="center-block" onClick={this.divideTracking} />

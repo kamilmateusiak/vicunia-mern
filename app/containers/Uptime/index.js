@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import { Link } from 'react-router';
 import Auth from '../../utils/auth';
 import UptimeContainer from '../../components/UptimeContainer';
 
@@ -66,7 +67,7 @@ export default class Uptime extends React.Component { // eslint-disable-line rea
 
             return (
               <div key={item._id} style={{ padding: '5px', height: item.containerHeight, borderLeft: `3px solid ${this.colors[index]}` }}>
-                <p><b>{item.project.name}</b> <span>{startDate.hours}:{startDate.minutes} - {endDate.hours}:{endDate.minutes}</span></p>
+                <p><Link to={`/project/${item.project.name}`}><b>{item.project.name}</b></Link> <span>{startDate.hours}:{startDate.minutes} - {endDate.hours}:{endDate.minutes}</span></p>
                 <p>{item.description}</p>
               </div>
             );
