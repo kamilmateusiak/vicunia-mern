@@ -2,8 +2,13 @@ const router = require('express').Router();
 const controller = require('../controllers/trackerController');
 
 router.route('/')
-  .get(controller.get)
-  .post(controller.post)
   .patch(controller.patch);
+
+router.route('/:userid')
+  .get(controller.get)
+  .post(controller.post);
+
+router.route('/:userid/all')
+  .get(controller.getAllUserEvents);
 
 module.exports = router;

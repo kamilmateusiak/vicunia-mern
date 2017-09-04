@@ -4,6 +4,7 @@ const express = require('express');
 const logger = require('./logger');
 const mongoose = require('mongoose');
 const bluebird = require('bluebird');
+const passport = require('passport');
 
 const argv = require('minimist')(process.argv.slice(2));
 const setup = require('./middlewares/frontendMiddleware');
@@ -22,9 +23,17 @@ mongoose.connection.on('error', () => {
   process.exit(1);
 });
 
+require('./api/models/userModel');
+
 // If you need a backend, e.g. an API, add your custom backend-specific middleware here
 // app.use('/api', myApi);
 app.use('/api', require('./api'));
+app.use(passport.initialize());
+passport.use('local-login', require('./api/services/passportLoginLocal'));
+passport.use('local-signup', require('./api/services/passportSignUpLocal'));
+
+const authCheckMiddleware = require('./middlewares/authMiddleware');
+app.use('/api', authCheckMiddleware);
 
 // In production we need to pass these values in instead of relying on webpack
 setup(app, {

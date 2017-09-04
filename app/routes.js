@@ -3,6 +3,7 @@
 // See http://blog.mxstbr.com/2016/01/react-apps-with-pages for more information
 // about the code splitting business
 import { getAsyncInjectors } from 'utils/asyncInjectors';
+import Auth from './utils/auth';
 
 const errorLoading = (err) => {
   console.error('Dynamic page loading failed', err); // eslint-disable-line no-console
@@ -33,24 +34,64 @@ export default function createRoutes(store) {
 
         importModules.catch(errorLoading);
       },
-    }, 
-    // {
-    //   path: '/projects',
-    //   name: 'projects',
-    //   getComponent(nextState, cb) {
-    //     const importModules = Promise.all([
-    //       import('containers/Projects'),
-    //     ]);
+      onEnter: (nextState, replace) => {
+        if (!Auth.isUserAuthenticated()) {
+          replace('/login');
+        }
+      }
+    },
+    {
+      path: '/project/:name',
+      name: 'project',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/ProjectPage'),
+        ]);
 
-    //     const renderRoute = loadModule(cb);
+        const renderRoute = loadModule(cb);
 
-    //     importModules.then(([component]) => {
-    //       renderRoute(component);
-    //     });
+        importModules.then(([component]) => {
+          renderRoute(component);
+        });
 
-    //     importModules.catch(errorLoading);
-    //   },
-    // },
+        importModules.catch(errorLoading);
+      },
+      onEnter: (nextState, replace) => {
+        if (!Auth.isUserAuthenticated()) {
+          replace('/login');
+        }
+      }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/LoginPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([component]) => {
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+      onEnter: (nextState, replace) => {
+        if (Auth.isUserAuthenticated()) {
+          replace('/');
+        }
+      }
+    },
+    {
+      path: '/logout',
+      name: 'logout',
+      onEnter: (nextState, replace) => {
+        Auth.deauthenticateUser();
+        replace('/');
+      }
+    },
     {
       path: '*',
       name: 'notfound',

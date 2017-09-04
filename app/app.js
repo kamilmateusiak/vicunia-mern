@@ -15,6 +15,10 @@ import { Provider } from 'react-redux';
 import { applyRouterMiddleware, Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { useScroll } from 'react-router-scroll';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+import { blue800 } from 'material-ui/styles/colors';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import 'sanitize.css/sanitize.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'jquery';
@@ -68,21 +72,32 @@ const rootRoute = {
   childRoutes: createRoutes(store),
 };
 
+injectTapEventPlugin();
+
+const muiTheme = getMuiTheme({
+  palette: {
+    textColor: blue800,
+    primary1Color: blue800,
+  },
+});
+
 const render = (messages) => {
   ReactDOM.render(
-    <Provider store={store}>
-      <LanguageProvider messages={messages}>
-        <Router
-          history={history}
-          routes={rootRoute}
-          render={
-            // Scroll to top when going to a new page, imitating default browser
-            // behaviour
-            applyRouterMiddleware(useScroll())
-          }
-        />
-      </LanguageProvider>
-    </Provider>,
+    <MuiThemeProvider muiTheme={muiTheme}>
+      <Provider store={store}>
+        <LanguageProvider messages={messages}>
+          <Router
+            history={history}
+            routes={rootRoute}
+            render={
+              // Scroll to top when going to a new page, imitating default browser
+              // behaviour
+              applyRouterMiddleware(useScroll())
+            }
+          />
+        </LanguageProvider>
+      </Provider>
+    </MuiThemeProvider>,
     document.getElementById('app')
   );
 };

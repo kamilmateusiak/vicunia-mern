@@ -7,8 +7,13 @@ import TrackerList from '../../components/TrackerList';
 import StopButton from '../../components/StopButton';
 import DivideButton from '../../components/DivideButton';
 import TrackerContainer from '../../components/TrackerContainer';
+import Auth from '../../utils/auth';
 
 export default class Tracker extends React.Component { // eslint-disable-line react/prefer-stateless-function
+  static propTypes = {
+    trackerWidth: React.PropTypes.number,
+  }
+
   constructor(props) {
     super(props);
     this.timerInterval = 0;
@@ -25,7 +30,7 @@ export default class Tracker extends React.Component { // eslint-disable-line re
       minutes: 0,
       seconds: 0,
     },
-  }
+  };
 
   componentDidMount() {
     fetch('/api/projects/')
@@ -36,7 +41,7 @@ export default class Tracker extends React.Component { // eslint-disable-line re
         });
       })
       .then(() => {
-        fetch('/api/tracker/')
+        fetch(`/api/tracker/${Auth.getUserId()}`)
         .then((response) => response.json())
         .then((data) => {
           if (data !== null) {
@@ -63,6 +68,10 @@ export default class Tracker extends React.Component { // eslint-disable-line re
       });
   }
 
+  componentWillUnmount() {
+    clearInterval(this.timerInterval);
+  }
+
   handleOnProjectInputChange = (e) => {
     this.setState({
       selectedItem: { name: e.target.value, _id: '' },
@@ -75,19 +84,37 @@ export default class Tracker extends React.Component { // eslint-disable-line re
     });
   }
   handleListItemClick = (item) => {
-    this.setState({
-      selectedItem: { name: item.name, _id: item._id },
-      listVisibility: false,
-    });
-    this.startTimer(item);
+    if (!_.isEmpty(this.state.trackerEvent) && item._id !== this.state.trackerEvent.project) {
+      this.stopTracking()
+        .then(() => {
+          this.setState({
+            selectedItem: { name: item.name, _id: item._id },
+            listVisibility: false,
+          });
+          this.startTimer(item);
+        });
+    } else if (_.isEmpty(this.state.trackerEvent)) {
+      this.setState({
+        selectedItem: { name: item.name, _id: item._id },
+        listVisibility: false,
+      });
+      this.startTimer(item);
+    } else {
+      this.setState({
+        selectedItem: { name: item.name, _id: item._id },
+        listVisibility: false,
+      });
+    }
   }
   focusController = (state) => {
-    this.setState({
-      listVisibility: state,
-    });
+    setTimeout(() => {
+      this.setState({
+        listVisibility: state,
+      });
+    }, 500);
   }
   startTimer = (item) => {
-    fetch('/api/tracker/', {
+    return fetch(`/api/tracker/${Auth.getUserId()}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -119,7 +146,7 @@ export default class Tracker extends React.Component { // eslint-disable-line re
   }
 
   stopTracking = () => {
-    fetch('/api/tracker/', {
+    return fetch('/api/tracker/', {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -178,26 +205,26 @@ export default class Tracker extends React.Component { // eslint-disable-line re
 
   render() {
     return (
-      <div className="container">
-        <TrackerContainer>
-          <div className="col-sm-1">
-            <StopButton className="center-block" onClick={this.stopTracking} />
-            <DivideButton className="center-block" onClick={this.divideTracking} />
-          </div>
-          <div className="col-md-3">
+      <TrackerContainer trackerWidth={this.props.trackerWidth}>
+        <div className="col-sm-1">
+          <StopButton className="center-block" onClick={this.stopTracking} />
+          <DivideButton className="center-block" onClick={this.divideTracking} />
+        </div>
+        <div className="col-md-3">
+          <div style={{ position: 'relative' }}>
             <TrackerProjectInput focusController={this.focusController} selectedItem={this.state.selectedItem.name} handleOnChange={this.handleOnProjectInputChange} />
-            {this.state.listVisibility &&
+            { this.state.listVisibility &&
               <TrackerList handleListItemClick={this.handleListItemClick} items={this.state.items.filter((item) => item.name.toUpperCase().indexOf(this.state.selectedItem.name.toUpperCase()) >= 0)}></TrackerList>
             }
           </div>
-          <div className="col-md-3">
-            <TrackerDescriptionInput selectedItemDesc={this.state.selectedItemDescription} handleOnChange={this.handleOnDescriptionInputChange} />
-          </div>
-          <div className="col-md-3">
-            <TrackerTimer timer={this.state.timer} />
-          </div>
-        </TrackerContainer>
-      </div>
+        </div>
+        <div className="col-md-3">
+          <TrackerDescriptionInput selectedItemDesc={this.state.selectedItemDescription} handleOnChange={this.handleOnDescriptionInputChange} />
+        </div>
+        <div className="col-md-3">
+          <TrackerTimer timer={this.state.timer} />
+        </div>
+      </TrackerContainer>
     );
   }
 }
