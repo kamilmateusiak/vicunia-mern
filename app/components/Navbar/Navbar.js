@@ -20,7 +20,14 @@ export default class Navbar extends React.Component { // eslint-disable-line rea
           <div className="collapse navbar-collapse" id="desktop-nav">
             <ul className="nav navbar-nav">
               <li><Link to="/"><FormattedMessage {...messages.home} /></Link></li>
-              <li><Link to="/projects"><FormattedMessage {...messages.projects} /></Link></li>
+              <li className="dropdown">
+                <a href="" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><FormattedMessage {...messages.projects} /><span className="caret"></span></a>
+                <ul className="dropdown-menu">
+                  <li><Link to={`/project/archicom`}>Archicom</Link></li>
+                  <li><Link to={`/project/zzysh`}>Zzysh</Link></li>
+                  <li><Link to={`/project/20minutprzerwy`}>20 minut przerwy</Link></li>
+                </ul>
+              </li>
               <li><Link to="/uptime">Czas pracy</Link></li>
               <li><Link to="/calendar">Kalendarz</Link></li>
               <li><Link to="/community">Społeczność</Link></li>
