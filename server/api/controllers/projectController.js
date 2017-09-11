@@ -35,6 +35,7 @@ exports.getProject = (req, res, next) => {
         return Tracker
           .where({ endDate: { $ne: null }, user: user._id, project: project._id })
           .find()
+          .select('endDate startDate')
           .then((events) => {
             user.trackerEvents = events;
           });
