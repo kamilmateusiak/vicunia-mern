@@ -1,5 +1,6 @@
 import React from 'react';
 import Tracker from '../Tracker';
+import TeamMembers from '../TeamMembers';
 
 export default class ProjectPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
   render() {
@@ -7,6 +8,7 @@ export default class ProjectPage extends React.Component { // eslint-disable-lin
       <div className="container">
         <div>
           <Tracker />
+          <TeamMembers />
         </div>
       </div>
     );

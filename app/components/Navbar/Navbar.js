@@ -25,7 +25,7 @@ export default class Navbar extends React.Component { // eslint-disable-line rea
                 <ul className="dropdown-menu">
                   <li><Link to={`/project/archicom`}>Archicom</Link></li>
                   <li><Link to={`/project/zzysh`}>Zzysh</Link></li>
-                  <li><Link to={`/project/20minutprzerwy`}>20 minut przerwy</Link></li>
+                  <li><Link to={`/project/20_minut_przerwy`}>20 minut przerwy</Link></li>
                 </ul>
               </li>
               <li><Link to="/uptime">Czas pracy</Link></li>
