@@ -63,6 +63,28 @@ export default function createRoutes(store) {
       }
     },
     {
+      path: '/users/me',
+      name: 'me',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          import('containers/UserPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([component]) => {
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+      onEnter: (nextState, replace) => {
+        if (!Auth.isUserAuthenticated()) {
+          replace('/login');
+        }
+      }
+    },
+    {
       path: '/login',
       name: 'login',
       getComponent(nextState, cb) {

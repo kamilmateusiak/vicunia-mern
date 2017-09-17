@@ -11,6 +11,7 @@ const UserSchema = new Schema({
   password: String,
   name: String,
   projects: [{ type: mongoose.Schema.ObjectId, ref: 'project' }],
+  avatar: { data: Buffer, contentType: String },
 });
 
 
